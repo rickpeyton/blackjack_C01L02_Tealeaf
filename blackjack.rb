@@ -43,6 +43,7 @@ module Hand
     puts "#{name}'s hand"
     cards.each { |card| puts "=> #{card}" }
     puts "=> #{hand_total}"
+    puts
   end
 
   def get_card(from_deck)
@@ -78,6 +79,13 @@ class Dealer
     @name = 'Dealer'
     @cards = []
   end
+
+  def show_flop
+    puts "#{name}'s hand"
+    puts '=> Card one is hidden.'
+    puts "=> #{cards[1]}"
+    puts
+  end
 end
 
 class Player
@@ -103,6 +111,8 @@ end
 
 class Game
   attr_accessor :deck, :player, :dealer
+  BLACKJACK_TOT = 21
+  DEALER_MIN_TOT = 17
   def initialize
     @deck = Deck.new
     @deck.shuffle_deck!
@@ -111,8 +121,14 @@ class Game
     system 'clear'
   end
 
+  def show_flop
+    player.show_hand
+    dealer.show_flop
+  end
+
   def play
     deal_cards
+    show_flop
     play_player_hand
     if player.hand_total > 21
       puts 'Bust! Dealer wins'
@@ -157,7 +173,6 @@ class Game
   end
 
   def play_player_hand
-    player.show_hand
     hit_or_stay unless blackjack?(player)
     puts 'Blackjack!' if blackjack?(player)
   end
